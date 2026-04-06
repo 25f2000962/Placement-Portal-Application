@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+.alert {
+    animation: fadeOut 5s forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; display: none; }
+}
+</style>
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-4">
+    <nav class="navbar navbar-dark bg-dark px-4">
+    <span class="navbar-brand">Placement Portal</span>
+
+    <div class="ms-auto">
+        <h2 class="mb-4"> Search Panel</h2>
+    </div>
+</nav>
+    
+<br>
+<br>
+    <!-- Search Form -->
+    <form method="GET" action="/admin/search">
+        <div class="row">
+
+            <div class="col-md-4">
+                <select name="category" class="form-select" required>
+                    <option value="">Select Category</option>
+                    <option value="student">Student</option>
+                    <option value="company">Company</option>
+                    <option value="job">Job</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <input type="text" name="query" class="form-control" placeholder="Enter name / email / ID" required>
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100">Search</button>
+            </div>
+
+        </div>
+    </form>
+
+    <hr>
+
+
+{% if request.args.get('query') %}
+
+    {% if results and results|length > 0 %}
+
+        <h4>Results:</h4>
+
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email / Info</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in results %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name or  item.company_name or  item.title }}</td>
+                    <td>{{ item.email or item.description }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+
+        <div class="alert alert-danger mt-3">
+             No results found
+        </div>
+
+    {% endif %}
+
+{% endif %}
+
+
+        
+
+    
+</div>
+
+</body>
+</html>

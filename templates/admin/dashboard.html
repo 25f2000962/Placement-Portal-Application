@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f6f9;
+        }
+
+        .navbar {
+            background-color: #212529;
+        }
+
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+
+        .card {
+            border-radius: 10px;
+        }
+    
+.alert {
+    animation: fadeOut 5s forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; display: none; }
+}
+
+    </style>
+</head>
+
+<body>
+
+<!-- 🔹 NAVBAR -->
+<nav class="navbar bg-dark  navbar-expand-lg">
+    <div class="container-fluid">
+
+        <a class="navbar-brand">Admin Panel</a>
+
+        <!-- SEARCH -->
+        <form class="d-flex" action="/admin/search" method="GET">
+            
+            <button class="btn btn-light">Search</button>
+        </form>
+
+        <!-- LOGOUT -->
+        <a href="/logout" class="btn btn-danger ms-3">Logout</a>
+
+    </div>
+</nav>
+
+
+<div class="container mt-4">
+
+    <!-- 🔹 FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <h2 class="mb-4">Admin Dashboard</h2>
+
+    <!-- 🔹 STATS -->
+    <div class="row text-center mb-5">
+
+        <div class="col-md-3">
+            <div class="card shadow p-3">
+                <h4>{{ students }}</h4>
+                <p>Total Students</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow p-3">
+                <h4>{{ companies }}</h4>
+                <p>Total Companies</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow p-3">
+                <h4>{{ jobs }}</h4>
+                <p>Total Drives</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow p-3">
+                <h4>{{ applications }}</h4>
+                <p>Total Applications</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 🔹 MAIN SECTIONS -->
+    <div class="row">
+
+        <!-- COMPANIES -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow p-4 text-center">
+
+                <h4>Companies</h4>
+                <p>Approve, reject or blacklist companies</p>
+
+                <a href="/admin/companies" class="btn btn-dark">
+                    View Companies
+                </a>
+
+            </div>
+        </div>
+
+        <!-- STUDENTS -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow p-4 text-center">
+
+                <h4>Students</h4>
+                <p>Manage student accounts</p>
+
+                <a href="/admin/students" class="btn btn-success">
+                    View Students
+                </a>
+
+            </div>
+        </div>
+
+        <!-- DRIVES -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow p-4 text-center">
+
+                <h4>Placement Drives</h4>
+                <p>Approve or reject drives</p>
+
+                <a href="/admin/view_drive" class="btn btn-primary">
+                    View Drives
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
