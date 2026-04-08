@@ -88,7 +88,18 @@
                 <p><strong>ID:</strong> {{ s.id }}</p>
                 <p><strong>Email:</strong> {{ s.email }}</p>
                 <p><strong>Contact:</strong> {{ s.phone}}</p>
-                
+                <p><strong>Resume:</strong>
+    {% if s.resume %}
+        <a href="{{ url_for('static', filename=s.resume) }}" 
+           target="_blank" 
+           class="btn btn-sm btn-outline-success ms-2">
+            View
+        </a>
+    {% else %}
+        <span class="text-danger ms-2">Not Uploaded</span>
+    {% endif %}
+</p>
+
                 <!-- STATUS BADGE -->
                 {% if s.is_blacklisted %}
                     <span class="badge bg-danger">Blacklisted</span>
@@ -112,6 +123,9 @@
                     <a href="/admin/students/deactivate/{{ s.id }}" class="btn btn-secondary btn-sm">
                         Deactivate
                     </a>
+                    <a href="/admin/student/{{ s.id }}/history" class="btn btn-primary btn-sm">
+    View History
+</a>
 
                     
 

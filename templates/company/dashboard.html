@@ -30,8 +30,16 @@
 
 <!-- 🔹 MAIN CONTENT -->
 <div class="container mt-4">
-
-    <hr>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+   
 
     <!-- 🔹 COMPANY INFO -->
     <div class="card p-3 mb-4">
@@ -85,7 +93,7 @@
         {% for job in jobs %}
             <tr>
                 <td>{{ job.title }}</td>
-                <td>{{ job.deadline.strftime('%d-%m-%Y') }}</td>
+                <td>{{ job.deadline.strftime('%d-%m-%Y')  if job.deadline else 'Not set' }}</td>
 
                 <td>
                     {% if job.is_approved %}
@@ -183,7 +191,7 @@
 
 <div class="container mt-4">
 
-    <hr>
+    
 
     <h4>Closed Drives</h4>
 

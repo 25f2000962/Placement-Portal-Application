@@ -63,7 +63,7 @@
     {% for category, message in messages %}
       <div class="alert alert-{{ category }} alert-dismissible fade show m-3">
     {{ message }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    
 </div>
     {% endfor %}
   {% endif %}
@@ -153,6 +153,13 @@
             <!-- SHORTLISTED -->
             <div class="tab-pane fade" id="shortlisted">
                 <table class="table">
+                    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Email</th>
+            <th>Status</th>
+        </tr>
+    </thead>
                     <tbody>
                         {% for app in applications %}
                         {% if app.status == "Shortlisted" %}
@@ -172,6 +179,13 @@
             <!-- REJECTED -->
             <div class="tab-pane fade" id="rejected">
                 <table class="table">
+                    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Email</th>
+            <th>Status</th>
+        </tr>
+    </thead>
                     <tbody>
                         {% for app in applications %}
                         {% if app.status == "Rejected" %}

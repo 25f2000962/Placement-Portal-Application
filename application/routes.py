@@ -7,7 +7,6 @@ from sqlalchemy import or_
 import os
 from werkzeug.utils import secure_filename
 import os
-
 import uuid
 
 
@@ -30,20 +29,12 @@ def register_student():
     if not name or not email or not password:
         flash("Fill all required fields")
         return redirect("/register/student")
-    """
-    if not file or file.filename == "":
-        flash("Please upload resume!", "danger")
-        return redirect("/register/student")
+    existing_student = Student.query.filter_by(email=email).first()
 
-    request.files.get("resume")
-    existing_user = Student.query.filter_by(email=email).first()
-    if existing_user:
-        flash("Email already registered!", "warning")
-        return redirect("/register/student")
-
-    filename = secure_filename(file.filename)
-    filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-    file.save(filepath)"""
+    if existing_student:
+        flash("You are already registered! Please login.", "warning")
+        return redirect("/login")
+    
     student = Student(name=name, email=email, password=password, phone=phone)
     db.session.add(student)
     db.session.commit()
@@ -68,13 +59,17 @@ def register_company():
     if Company.query.filter_by(email=email).first():
         flash("Company already registered!", "warning")
         return redirect("/login")
+    
+    if Company.query.filter_by(email=email).first():
+        flash("You are already registered! Please login.", "warning")
+        return redirect("/login")
 
     company = Company(company_name=name, email=email, password=password,hr_contact=hr_contact,
         website=website)
     db.session.add(company)
     db.session.commit()
 
-    flash("Company registered successfully!", "success")  # ✅ add message
+    flash("Company registered successfully!", "success")  
     return redirect("/login")
 
 
@@ -103,8 +98,13 @@ def login():
             flash("User not found", "danger")
             return redirect("/login")
     
-        if user.is_blacklisted:
-            flash("You are blacklisted!", "danger")
+        
+        if not user:
+            flash("User not found", "danger")
+            return redirect("/login")
+
+        if not user.is_active:
+            flash("Your account is inactive", "danger")
             return redirect("/login")
 
     elif role == "company":
@@ -114,13 +114,13 @@ def login():
                 return redirect("/login")
 
 
-        if not user.is_approved:
-
-            flash("Waiting for admin approval", "warning")
-            return redirect("/login")
-
+       
         if user.is_blacklisted:
             flash("You are blacklisted!", "danger")
+            return redirect("/login")
+
+        if not user.is_approved:
+            flash("Waiting for admin approval", "warning")
             return redirect("/login")
 
 
@@ -194,8 +194,8 @@ def edit_profile():
 
     flash("Profile updated successfully!", "success")
     return redirect("/student/dashboard")
-@app.route("/apply/<int:job_id>")
-def apply(job_id):
+@app.route("/apply/<int:job_id>", methods=["POST"])
+def student_apply2(job_id):
     if session.get("role") != "student":
         return "Unauthorized"
 
@@ -206,12 +206,15 @@ def apply(job_id):
         student_id=student_id
     ).first()
 
-    if not existing:
+    if existing:
+        flash("Already applied!", "warning")
+    else:
         app_obj = Application(job_id=job_id, student_id=student_id)
         db.session.add(app_obj)
         db.session.commit()
+        flash("Applied successfully!", "success")
 
-    return render_template("student/apply.html",job_id=job_id)
+    return redirect("/student/apply")   
 
 
 @app.route("/student/applications")
@@ -234,26 +237,26 @@ def upload_resume():
         file = request.files['resume']
 
         if file:
-            # ✅ Create folder if not exists
+            
             upload_folder = os.path.join('static', 'resumes')
             os.makedirs(upload_folder, exist_ok=True)
 
-            # ✅ Generate unique filename
+            
             filename = str(uuid.uuid4()) + "_" + file.filename
 
             filepath = os.path.join(upload_folder, filename)
 
-            # ✅ Save file
+            
             file.save(filepath)
 
             
             student.resume = f"resumes/{filename}"
             db.session.commit()
 
-            # ✅ Flash message
+            
             flash("Resume uploaded successfully!", "success")
 
-            # ✅ Redirect to dashboard
+            
             
             return redirect("/student/dashboard")
 
@@ -307,7 +310,7 @@ def company_dashboard():
 
 
 @app.route("/company/view-drive/<int:job_id>")
-def company_view_drive(job_id):   # ✅ different name
+def company_view_drive(job_id):   
     if session.get("role") != "company":
         return "Unauthorized"
 
@@ -369,7 +372,6 @@ def delete_job(id):
     return redirect("/company/dashboard")
 @app.route("/company/edit-profile", methods=["POST"])
 def edit_company_profile():
-    # 🔐 Only company allowed
     if session.get("role") != "company":
         return "Unauthorized"
 
@@ -379,7 +381,6 @@ def edit_company_profile():
         flash("Company not found", "danger")
         return redirect("/company/dashboard")
 
-    # 🔹 Get form data
     company_name = request.form.get("company_name")
     email = request.form.get("email")
     hr_contact = request.form.get("hr_contact")
@@ -566,26 +567,6 @@ def deactivate_student(id):
     flash("Student deactivated!", "warning")
     return redirect("/admin/students")
 
-
-@app.route("/admin/student/blacklist/<int:id>")
-def blacklist_student(id):
-    if session.get("role") != "admin":
-        return redirect("/login")
-
-    student = Student.query.get(id)
-
-    student.is_blacklisted = True
-    student.is_active = False
-
-    db.session.commit()
-
-    flash("Student blacklisted!", "danger")
-    return redirect("/admin/students")
-
-
-
-
-
 @app.route("/admin/view_drive")
 def view_drive():
     if session.get("role") != "admin":
@@ -605,12 +586,12 @@ def search():
     if category == "student":
         if category == "student":
 
-        # ✅ If numeric → search ONLY by ID
+        
             if query.isdigit() and len(query) <= 5:
                 results = Student.query.filter_by(id=int(query)).all()
 
             else:
-            # ✅ Otherwise search text fields
+           
                 results = Student.query.filter(
                     or_(
                     Student.name.like(f"%{query}%"),
@@ -622,14 +603,11 @@ def search():
 
     elif category == "company":
         results = Company.query.filter(
-            Company.company_name.ilike(f"%{query}%") |
-            Company.email.ilike(f"%{query}%")
+            Company.company_name.ilike(f"%{query}%") 
+            
         ).all()
 
-    elif category == "job":
-        results = Job.query.filter(
-            Job.title.ilike(f"%{query}%")
-        ).all()
+    
 
     return render_template("/admin/search.html", results=results)
 
@@ -681,7 +659,20 @@ def view_applications(drive_id):
         applications=applications,
         drive=drive
     )
+@app.route("/admin/student/<int:student_id>/history")
+def student_history(student_id):
+    if session.get("role") != "admin":
+        return "Unauthorized"
 
+    student = Student.query.get(student_id)
+
+    applications = Application.query.filter_by(student_id=student_id).all()
+
+    return render_template(
+        "admin/student_history.html",
+        student=student,
+        applications=applications
+    )
 
 
 @app.route("/logout")

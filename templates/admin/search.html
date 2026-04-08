@@ -20,17 +20,20 @@
 
 <body class="bg-light">
 
-<div class="container mt-4">
+<div class="mb-0">
     <nav class="navbar navbar-dark bg-dark px-4">
     <span class="navbar-brand">Placement Portal</span>
 
-    <div class="ms-auto">
-        <h2 class="mb-4"> Search Panel</h2>
-    </div>
+    <a href="/admin/dashboard" class="btn btn-light me-2">Dashboard</a>
+
+    
 </nav>
     
 <br>
 <br>
+<h2 class="mb-4"> Search Panel</h2>
+    </div>
+
     <!-- Search Form -->
     <form method="GET" action="/admin/search">
         <div class="row">
@@ -40,7 +43,7 @@
                     <option value="">Select Category</option>
                     <option value="student">Student</option>
                     <option value="company">Company</option>
-                    <option value="job">Job</option>
+                    
                 </select>
             </div>
 
@@ -57,7 +60,7 @@
 
     <hr>
 
-
+<div class="container mt-4">
 {% if request.args.get('query') %}
 
     {% if results and results|length > 0 %}
@@ -70,6 +73,7 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email / Info</th>
+                    <th>Contact    </th>
                 </tr>
             </thead>
 
@@ -79,6 +83,13 @@
                     <td>{{ item.id }}</td>
                     <td>{{ item.name or  item.company_name or  item.title }}</td>
                     <td>{{ item.email or item.description }}</td>
+                    <td>{% if item.phone %}
+        {{ item.phone }}   <!-- Student -->
+    {% elif item.hr_contact %}
+        {{ item.hr_contact }}   <!-- Company -->
+    {% else %}
+        <span class="text-muted">N/A</span>
+    {% endif %}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -95,7 +106,7 @@
 {% endif %}
 
 
-        
+    </div>    
 
     
 </div>

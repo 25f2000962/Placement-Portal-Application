@@ -83,13 +83,19 @@
 
             <div class="card shadow p-3">
 
-                <h5>{{ d.company.company_name }}</h5>
+                <h5><p><strong>Job Title:</strong> {{ d.title }}</p></h5>
 
-                <p><strong>Job Title:</strong> {{ d.title }}</p>
+                <p><strong>{{ d.company.company_name }}</strong></p>
             
                 <p><strong>Salary:</strong> {{ d.salary }}</p>
 
-                <p><strong>Deadline:</strong> {{ d.deadline.strftime('%d-%m-%Y') }}</p>
+                <p><strong>Deadline:</strong> 
+    {% if d.deadline %}
+        {{ d.deadline.strftime('%Y-%m-%d') }}
+    {% else %}
+        Not provided
+    {% endif %}
+</p>
 
                 <!-- STATUS BADGE -->
                 {% if d.is_approved %}

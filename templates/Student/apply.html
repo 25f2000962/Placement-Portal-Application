@@ -10,6 +10,25 @@
         body {
             background: linear-gradient(to right, #fef6f9, #f0f9ff);
         }
+                
+.alert {
+    animation: fadeOut 5s ease forwards;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+    
     </style>
 </head>
 
@@ -24,7 +43,15 @@
         <a href="/logout" class="btn btn-danger">Logout</a>
     </div>
 </nav>
-
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 <!-- JOB LIST -->
 <div class="container mt-5">
 
@@ -34,27 +61,26 @@
 
         {% for job in jobs %}
         <div class="col-md-6 mb-4">
-
             <div class="card shadow h-100">
                 <div class="card-body">
 
                     <h5 class="card-title">{{ job.title }}</h5>
                     <p><strong>Company:</strong> {{ job.company.company_name if job.company else "N/A" }}</p>
-                    <p><strong>Description:</strong> {{ job.description  if job.deadline else 'N/A' }}</p>
+                    <p><strong>Description:</strong> {{ job.description  if job.description else 'N/A' }}</p>
                     <p><strong>Eligibility:</strong> {{ job.eligibility }}</p>
-                    <p><strong>Deadline:</strong> {{ job.deadline }}</p>
+                    <p><strong>Deadline:</strong>{{ job.deadline.strftime('%d-%m-%Y') if job.deadline else 'Not set' }}</p>
 
-                    <!-- APPLY BUTTON -->
                     {% if job.id in applied %}
     <button class="btn btn-secondary w-100" disabled>
         Already Applied
     </button>
 {% else %}
-    <a href="/apply/{{ job.id }}" class="btn btn-primary w-100">
-        Apply
-    </a>
+    <form action="/apply/{{ job.id }}" method="POST">
+        <button type="submit" class="btn btn-primary w-100">
+            Apply
+        </button>
+    </form>
 {% endif %}
-
                 </div>
             </div>
 
@@ -64,6 +90,7 @@
     </div>
 
 </div>
+
 
 </body>
 </html>

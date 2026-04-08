@@ -4,13 +4,19 @@
     <meta charset="UTF-8">
     <title>Applications</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+    margin: 0;
+    padding: 0;
+}
+    </style>
 </head>
 
-<body class="container mt-4">
-    <nav class="navbar bg-dark navbar-expand-lg">
+<body class="  mb-0">
+    <nav class="navbar bg-dark navbar-expand-lg  mb-0">
     <div class="container-fluid">
 
-        <a class="navbar-brand">Admin Panel</a>
+        <a class="navbar-brand text-white">Admin Panel</a>
 
         <!-- SEARCH -->
         <form class="d-flex" action="/admin/search" method="GET">
@@ -25,6 +31,8 @@
 </nav>
 
     <h3>Applications for {{ drive.title }}</h3>
+    <br>
+    <br>
 
     <table class="table table-bordered mt-3">
         <thead>
@@ -45,9 +53,15 @@
                 <td>{{ app.student.phone }}</td>
 
                 <td>
-                    <a href="/{{ app.student.resume }}" target="_blank">
-                        View Resume
-                    </a>
+                    {% if app.student.resume %}
+        <a href="{{ url_for('static', filename=app.student.resume) }}" 
+           target="_blank" 
+           class="btn btn-sm btn-outline-success">
+           View
+        </a>
+    {% else %}
+        <span class="text-danger">Not Uploaded</span>
+    {% endif %}
                 </td>
 
                 <td>{{ app.status }}</td>
