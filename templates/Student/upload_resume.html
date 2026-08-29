@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Resume</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+                
+.alert {
+    animation: fadeOut 5s ease forwards;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+    
+    </style>
+</head>
+
+<body class="bg-light">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    
+    <div class="card shadow p-4" style="width: 400px;">
+        
+        <h4 class="text-center mb-4">
+            {% if student.resume %}
+                Update Resume
+            {% else %}
+                Upload Resume
+            {% endif %}
+        </h4>
+
+        <!-- Optional: show current resume -->
+        {% if student.resume %}
+        <div class="mb-3 text-center">
+            <a href="{{ url_for('static', filename=student.resume) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                View Current Resume
+            </a>
+        </div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+
+            <div class="mb-3">
+                <label class="form-label">Choose File</label>
+                <input type="file" name="resume" class="form-control"
+                       >
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-success">
+                    {% if student.resume %}
+                        Update
+                    {% else %}
+                        Upload
+                    {% endif %}
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

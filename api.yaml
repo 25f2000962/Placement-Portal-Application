@@ -1,0 +1,276 @@
+openapi: 3.0.0
+info:
+  title: Placement Portal API
+  version: 1.0.0
+  description: API documentation for Placement Management System
+
+paths:
+
+  /:
+    get:
+      summary: Home page
+
+  /home:
+    get:
+      summary: Alternate home page
+
+  /login:
+    get:
+      summary: Render login page
+    post:
+      summary: Authenticate user and start session
+
+  /logout:
+    get:
+      summary: Logout user
+
+  /register/student:
+    get:
+      summary: Render student registration page
+    post:
+      summary: Register a new student
+
+  /register/company:
+    get:
+      summary: Render company registration page
+    post:
+      summary: Register a new company
+
+  /student/dashboard:
+    get:
+      summary: View student dashboard
+
+  /student/apply:
+    get:
+      summary: View available jobs
+
+  /apply/{job_id}:
+    post:
+      summary: Apply to job
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /student/applications:
+    get:
+      summary: View student applications
+
+  /student/profile:
+    get:
+      summary: View profile
+    post:
+      summary: Update profile
+
+  /student/edit-profile:
+    post:
+      summary: Edit student profile
+
+  /student/upload-resume:
+    get:
+      summary: Render upload page
+    post:
+      summary: Upload resume
+
+  /student/placements:
+    get:
+      summary: View placement records
+
+  /company/dashboard:
+    get:
+      summary: View company dashboard
+
+  /company/create-drive:
+    get:
+      summary: Render create drive page
+    post:
+      summary: Create job drive
+
+  /company/view-drive/{job_id}:
+    get:
+      summary: View applicants
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /company/close-drive/{job_id}:
+    get:
+      summary: Close job drive
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /company/delete-job/{id}:
+    get:
+      summary: Delete job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /company/edit-job/{id}:
+    get:
+      summary: Render edit job page
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    post:
+      summary: Update job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /company/edit-profile:
+    post:
+      summary: Update company profile
+
+  /shortlist/{id}:
+    get:
+      summary: Shortlist student
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /reject/{id}:
+    get:
+      summary: Reject student application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /admin/dashboard:
+    get:
+      summary: View system statistics
+
+  /admin/companies:
+    get:
+      summary: View all companies
+
+  /admin/companies/approve/{id}:
+    get:
+      summary: Approve company
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /admin/companies/reject/{id}:
+    get:
+      summary: Reject company
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /admin/companies/blacklist/{id}:
+    get:
+      summary: Blacklist company
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /admin/students:
+    get:
+      summary: View all students
+
+  /admin/students/approve/{id}:
+    get:
+      summary: Activate student
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /admin/students/reject/{id}:
+    get:
+      summary: Reject student
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /admin/students/deactivate/{id}:
+    get:
+      summary: Deactivate student
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /admin/view_drive:
+    get:
+      summary: View all drives
+
+  /admin/view_drive/approve/{id}:
+    get:
+      summary: Approve drive
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /admin/view_drive/reject/{id}:
+    get:
+      summary: Reject drive
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /admin/view_application/{drive_id}:
+    get:
+      summary: View applications for a drive
+      parameters:
+        - name: drive_id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /admin/search:
+    get:
+      summary: Search students or companies
+
+  
+  /admin/student/{student_id}/history:
+    get:
+      summary: Get student application history

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Applications</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+    margin: 0;
+    padding: 0;
+}
+    </style>
+</head>
+
+<body class="  mb-0">
+    <nav class="navbar bg-dark navbar-expand-lg  mb-0">
+    <div class="container-fluid">
+
+        <a class="navbar-brand text-white">Admin Panel</a>
+
+        <!-- SEARCH -->
+        <form class="d-flex" action="/admin/search" method="GET">
+            
+            <button class="btn btn-light">Search</button>
+        </form>
+        <a href="/admin/dashboard" class="btn btn-light me-2">Dashboard</a>
+        <!-- LOGOUT -->
+        <a href="/logout" class="btn btn-danger ms-3">Logout</a>
+
+    </div>
+</nav>
+
+    <h3>Applications for {{ drive.title }}</h3>
+    <br>
+    <br>
+
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Resume</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for app in applications %}
+            <tr>
+                <td>{{ app.student.name }}</td>
+                <td>{{ app.student.email }}</td>
+                <td>{{ app.student.phone }}</td>
+
+                <td>
+                    {% if app.student.resume %}
+        <a href="{{ url_for('static', filename=app.student.resume) }}" 
+           target="_blank" 
+           class="btn btn-sm btn-outline-success">
+           View
+        </a>
+    {% else %}
+        <span class="text-danger">Not Uploaded</span>
+    {% endif %}
+                </td>
+
+                <td>{{ app.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

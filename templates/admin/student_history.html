@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student History</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-4">
+
+    <h2>{{ student.name }} - Application History</h2>
+
+    <a href="/admin/students" class="btn btn-secondary mb-3">Back</a>
+
+    {% if applications %}
+        <table class="table table-bordered table-striped">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Job</th>
+                    <th>Company</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for app in applications %}
+                {% if app.job %}
+                <tr>
+                    <td>{{ app.job.title if app.job }}</td>
+                    <td>{{ app.job.company.company_name if app.job and app.job.company }}</td>
+                    <td>
+                        {% if app.status == "Selected" %}
+                            <span class="badge bg-success">Selected</span>
+                        {% elif app.status == "Rejected" %}
+                            <span class="badge bg-danger">Rejected</span>
+                        {% else %}
+                            <span class="badge bg-warning">{{ app.status }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+
+        </table>
+    {% else %}
+        <p>No applications found.</p>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
